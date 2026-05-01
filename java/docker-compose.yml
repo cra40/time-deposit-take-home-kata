@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: postgres:18
+    container_name: timedeposit-db
+    environment:
+      POSTGRES_DB: timedeposit
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: testpassword
+    ports:
+      - "15432:5432"

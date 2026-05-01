@@ -1,5 +1,7 @@
 package org.ikigaidigital;
 
+import org.ikigaidigital.service.interest.plan.BasicInterestPlanCalculator;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
@@ -19,7 +21,7 @@ public class TimeDepositCalculator {
                         interest += xs.get(i).getBalance() * 0.05 / 12;
                     }
                 } else if (xs.get(i).getPlanType().equals("basic")) {
-                    interest += xs.get(i).getBalance() * 0.01 / 12;
+                    interest = new BasicInterestPlanCalculator().calculateInterest(xs.get(i)).doubleValue();
                 }
             }
 

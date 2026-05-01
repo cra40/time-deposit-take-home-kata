@@ -6,11 +6,11 @@ import org.ikigaidigital.port.out.WithdrawalRepository;
 
 import java.util.List;
 
-public class WithdrawalsServiceImpl implements WithdrawalService {
+public class WithdrawalServiceImpl implements WithdrawalService {
 
     private final WithdrawalRepository withdrawalRepository;
 
-    public WithdrawalsServiceImpl(WithdrawalRepository withdrawalRepository) {
+    public WithdrawalServiceImpl(WithdrawalRepository withdrawalRepository) {
         this.withdrawalRepository = withdrawalRepository;
     }
 

@@ -18,13 +18,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class WithdrawalsServiceImplTest {
+class WithdrawalServiceImplTest {
 
     @Mock
     private WithdrawalRepository withdrawalRepository;
 
     @InjectMocks
-    private WithdrawalsServiceImpl underTest;
+    private WithdrawalServiceImpl underTest;
 
     @Test
     void getWithdrawalsByTimeDepositId_returnsWithdrawalsFromRepository() {

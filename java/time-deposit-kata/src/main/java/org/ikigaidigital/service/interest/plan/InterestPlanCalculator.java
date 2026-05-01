@@ -16,4 +16,12 @@ public interface InterestPlanCalculator {
         return balance.multiply(interestRate).divide(MONTHS, 2, RoundingMode.HALF_UP);
     }
 
+    default String getPlanType() {
+        return "";
+    }
+
+    default boolean isInterestPlanApplicable(String planType) {
+        return getPlanType().equalsIgnoreCase(planType);
+    }
+
 }

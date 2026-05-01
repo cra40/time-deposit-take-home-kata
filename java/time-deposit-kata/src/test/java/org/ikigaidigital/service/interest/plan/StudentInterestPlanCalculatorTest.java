@@ -10,6 +10,7 @@ import java.math.RoundingMode;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.ikigaidigital.service.interest.plan.PlanType.STUDENT;
 
 class StudentInterestPlanCalculatorTest {
 
@@ -18,7 +19,7 @@ class StudentInterestPlanCalculatorTest {
     @ParameterizedTest(name = "balance={1}, days={2} -> expected interest={3}")
     @MethodSource("planTypeTestCases")
     void calculateInterest_appliesCorrectInterest(double balance, int days, double expectedBalance) {
-        final TimeDeposit timeDeposit = new TimeDeposit(1, "test", balance, days);
+        final TimeDeposit timeDeposit = new TimeDeposit(1, STUDENT.name(), balance, days);
 
         BigDecimal actualBalance = underTest.calculateInterest(timeDeposit);
 
@@ -30,7 +31,9 @@ class StudentInterestPlanCalculatorTest {
                 Arguments.of(1000.00, 1, 0.00),
                 Arguments.of(1000.00, 30, 0.00),
                 Arguments.of(1000.00, 366, 0.00),
-                Arguments.of(1000.00, 31, 2.50)
+                Arguments.of(1000.00, 400, 0.00),
+                Arguments.of(1000.00, 31, 2.50),
+                Arguments.of(1000.00, 365, 2.50)
         );
     }
 }

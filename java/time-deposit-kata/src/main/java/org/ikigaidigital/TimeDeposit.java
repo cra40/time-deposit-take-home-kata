@@ -34,6 +34,10 @@ public class TimeDeposit {
         this.balance = toBigDecimal(balance);
     }
 
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
     public BigDecimal getBalanceAsBigDecimal() {
         return balance;
     }

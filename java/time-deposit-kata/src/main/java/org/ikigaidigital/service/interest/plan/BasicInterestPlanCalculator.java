@@ -1,6 +1,6 @@
 package org.ikigaidigital.service.interest.plan;
 
-import org.ikigaidigital.TimeDeposit;
+import org.ikigaidigital.domain.TimeDepositV2;
 
 import java.math.BigDecimal;
 
@@ -11,9 +11,9 @@ public class BasicInterestPlanCalculator implements InterestPlanCalculator {
     private static final BigDecimal INTEREST_RATE = BigDecimal.valueOf(0.01);
 
     @Override
-    public BigDecimal calculateInterest(TimeDeposit deposit) {
-        if (deposit.getDays() > 30) {
-            return calculateMonthlyInterest(deposit.getBalanceAsBigDecimal(), INTEREST_RATE);
+    public BigDecimal calculateInterest(TimeDepositV2 deposit) {
+        if (deposit.days() > 30) {
+            return calculateMonthlyInterest(deposit.balance(), INTEREST_RATE);
         }
         return ZERO_INTEREST;
     }

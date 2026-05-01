@@ -1,10 +1,10 @@
 package org.ikigaidigital;
 
+import org.ikigaidigital.service.interest.factory.InterestPlanCalculatorFactory;
 import org.ikigaidigital.service.interest.plan.BasicInterestPlanCalculator;
 import org.ikigaidigital.service.interest.plan.InterestPlanCalculator;
 import org.ikigaidigital.service.interest.plan.PremiumInterestPlanCalculator;
 import org.ikigaidigital.service.interest.plan.StudentInterestPlanCalculator;
-import org.ikigaidigital.service.interest.factory.InterestPlanCalculatorFactory;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;

@@ -1,5 +1,6 @@
-package org.ikigaidigital;
+package org.ikigaidigital.service.interest;
 
+import org.ikigaidigital.domain.TimeDepositV2;
 import org.ikigaidigital.service.interest.factory.InterestPlanCalculatorFactory;
 import org.ikigaidigital.service.interest.plan.InterestPlanCalculator;
 import org.junit.jupiter.api.Test;
@@ -14,11 +15,11 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.ikigaidigital.TestUtil.toBigDecimal;
-import static org.ikigaidigital.TestUtil.toTimeDepositV2;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class TimeDepositCalculatorTest {
+class TimeDepositCalculatorV2Test {
 
     private static final String PLAN_TYPE = "planType";
 
@@ -29,37 +30,39 @@ class TimeDepositCalculatorTest {
     private InterestPlanCalculator interestPlanCalculator;
 
     @InjectMocks
-    private TimeDepositCalculator underTest;
+    private TimeDepositCalculatorV2 underTest;
 
     @Test
     void updateBalance_delegatesToFactoryAndAppliesInterestToBalance() {
-        final TimeDeposit deposit = new TimeDeposit(1, PLAN_TYPE, 1000.00, 45);
-        final BigDecimal interest = toBigDecimal(0.83);
+        TimeDepositV2 deposit = new TimeDepositV2(1, PLAN_TYPE, toBigDecimal(1000.00), 45);
+        BigDecimal interest = toBigDecimal(0.83);
         when(interestPlanCalculatorFactory.getCalculator(PLAN_TYPE)).thenReturn(interestPlanCalculator);
-        when(interestPlanCalculator.calculateInterest(toTimeDepositV2(deposit))).thenReturn(interest);
+        when(interestPlanCalculator.calculateInterest(deposit)).thenReturn(interest);
 
-        underTest.updateBalance(List.of(deposit));
+        List<TimeDepositV2> updatedDeposits = underTest.updateBalance(List.of(deposit));
 
-        assertThat(deposit.getBalance()).isEqualTo(1000.83);
+        verify(interestPlanCalculatorFactory).getCalculator(PLAN_TYPE);
+        verify(interestPlanCalculator).calculateInterest(deposit);
+        assertThat(updatedDeposits.get(0).balance()).isEqualTo(toBigDecimal(1000.83));
     }
 
     @Test
     void updateBalance_processesEachDepositIndependently() {
-        final TimeDeposit deposit1 = new TimeDeposit(1, PLAN_TYPE, 1000.00, 45);
-        final TimeDeposit deposit2 = new TimeDeposit(2, PLAN_TYPE, 2000.00, 45);
+        TimeDepositV2 deposit1 = new TimeDepositV2(1, PLAN_TYPE, toBigDecimal(1000.00), 45);
+        TimeDepositV2 deposit2 = new TimeDepositV2(2, PLAN_TYPE, toBigDecimal(2000.00), 45);
         when(interestPlanCalculatorFactory.getCalculator(PLAN_TYPE)).thenReturn(interestPlanCalculator);
-        when(interestPlanCalculator.calculateInterest(toTimeDepositV2(deposit1))).thenReturn(toBigDecimal(0.83));
-        when(interestPlanCalculator.calculateInterest(toTimeDepositV2(deposit2))).thenReturn(toBigDecimal(1.67));
+        when(interestPlanCalculator.calculateInterest(deposit1)).thenReturn(toBigDecimal(0.83));
+        when(interestPlanCalculator.calculateInterest(deposit2)).thenReturn(toBigDecimal(1.67));
 
-        underTest.updateBalance(List.of(deposit1, deposit2));
+        List<TimeDepositV2> updatedDeposits = underTest.updateBalance(List.of(deposit1, deposit2));
 
-        assertThat(deposit1.getBalance()).isEqualTo(1000.83);
-        assertThat(deposit2.getBalance()).isEqualTo(2001.67);
+        assertThat(updatedDeposits.get(0).balance()).isEqualTo(toBigDecimal(1000.83));
+        assertThat(updatedDeposits.get(1).balance()).isEqualTo(toBigDecimal(2001.67));
     }
 
     @Test
     void updateBalance_propagatesExceptionForUnknownPlanType() {
-        final TimeDeposit deposit = new TimeDeposit(1, PLAN_TYPE, 1000.00, 45);
+        TimeDepositV2 deposit = new TimeDepositV2(1, PLAN_TYPE, toBigDecimal(1000.00), 45);
         when(interestPlanCalculatorFactory.getCalculator(PLAN_TYPE))
                 .thenThrow(new IllegalArgumentException("Failed to find interest calculation plan for type: " + PLAN_TYPE));
 

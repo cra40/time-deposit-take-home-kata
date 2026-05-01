@@ -1,6 +1,6 @@
 package org.ikigaidigital.service.interest.plan;
 
-import org.ikigaidigital.TimeDeposit;
+import org.ikigaidigital.domain.TimeDepositV2;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -10,6 +10,7 @@ import java.math.RoundingMode;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.ikigaidigital.TestUtil.toBigDecimal;
 import static org.ikigaidigital.service.interest.plan.PlanType.PREMIUM;
 
 class PremiumInterestPlanCalculatorTest {
@@ -19,7 +20,7 @@ class PremiumInterestPlanCalculatorTest {
     @ParameterizedTest(name = "balance={1}, days={2} -> expected interest={3}")
     @MethodSource("planTypeTestCases")
     void calculateInterest_appliesCorrectInterest(double balance, int days, double expectedBalance) {
-        final TimeDeposit timeDeposit = new TimeDeposit(1, PREMIUM.name(), balance, days);
+        final TimeDepositV2 timeDeposit = new TimeDepositV2(1, PREMIUM.name(), toBigDecimal(balance), days);
 
         BigDecimal actualBalance = underTest.calculateInterest(timeDeposit);
 

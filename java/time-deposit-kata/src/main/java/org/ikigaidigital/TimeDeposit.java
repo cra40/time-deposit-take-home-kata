@@ -1,14 +1,18 @@
 package org.ikigaidigital;
 
+import org.ikigaidigital.domain.TimeDepositV2;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+/** @deprecated Use {@link TimeDepositV2} instead */
 public class TimeDeposit {
-    private final int id;
+    private final Integer id;
     private final String planType;
     private BigDecimal balance;
-    private final int days;
+    private final Integer days;
 
+    @Deprecated
     public TimeDeposit(int id, String planType, Double balance, int days) {
         this.id = id;
         this.planType = planType;

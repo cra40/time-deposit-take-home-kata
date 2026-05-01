@@ -8,5 +8,5 @@ public interface TimeDepositRepository {
 
     List<TimeDepositV2> findAll();
 
-    void save(TimeDepositV2 timeDeposit);
+    void save(List<TimeDepositV2> timeDeposits);
 }

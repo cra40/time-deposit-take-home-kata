@@ -1,20 +1,29 @@
 package org.ikigaidigital;
 
+import org.ikigaidigital.domain.TimeDepositV2;
+import org.ikigaidigital.port.in.TimeDepositService;
+import org.ikigaidigital.port.out.TimeDepositRepository;
+import org.ikigaidigital.service.TimeDepositServiceImpl;
+import org.ikigaidigital.service.interest.TimeDepositCalculatorV2;
 import org.ikigaidigital.service.interest.factory.InterestPlanCalculatorFactory;
 import org.ikigaidigital.service.interest.plan.BasicInterestPlanCalculator;
 import org.ikigaidigital.service.interest.plan.InterestPlanCalculator;
 import org.ikigaidigital.service.interest.plan.PremiumInterestPlanCalculator;
 import org.ikigaidigital.service.interest.plan.StudentInterestPlanCalculator;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.ArgumentCaptor;
 
 import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.ikigaidigital.TestUtil.toBigDecimal;
+import static org.mockito.Mockito.*;
 
-public class ServiceTestToBeRefactored {
+public class TimeDepositServiceTest {
 
     private static final String BASIC_PLAN_TYPE = "basic";
     private static final String STUDENT_PLAN_TYPE = "student";
@@ -25,16 +34,31 @@ public class ServiceTestToBeRefactored {
             new StudentInterestPlanCalculator(),
             new PremiumInterestPlanCalculator()
     );
-    private final TimeDepositCalculator underTest = new TimeDepositCalculator(new InterestPlanCalculatorFactory(calculators));
+
+    private TimeDepositRepository repository;
+    private TimeDepositService underTest;
+
+    @BeforeEach
+    void setUp() {
+        repository = mock(TimeDepositRepository.class);
+        underTest = new TimeDepositServiceImpl(
+                repository,
+                new TimeDepositCalculatorV2(new InterestPlanCalculatorFactory(calculators))
+        );
+    }
 
     @ParameterizedTest(name = "{0}: balance={1}, days={2} -> expected={3}")
     @MethodSource("planTypeTestCases")
     void updateBalance_appliesCorrectInterestByPlanType(String planType, double balance, int days, double expectedBalance) {
-        List<TimeDeposit> deposits = List.of(new TimeDeposit(1, planType, balance, days));
+        final List<TimeDepositV2> deposits = List.of(new TimeDepositV2(1, planType, toBigDecimal(balance), days));
+        when(repository.findAll()).thenReturn(deposits);
 
-        underTest.updateBalance(deposits);
+        underTest.updateTimeDepositBalances();
 
-        assertThat(deposits.get(0).getBalance()).isEqualTo(expectedBalance);
+        verify(repository).findAll();
+        ArgumentCaptor<List<TimeDepositV2>> timeDepositCaptor = ArgumentCaptor.forClass(List.class);
+        verify(repository).save(timeDepositCaptor.capture());
+        assertThat(timeDepositCaptor.getValue().get(0).balance()).isEqualTo(toBigDecimal(expectedBalance));
     }
 
     private static Stream<Arguments> planTypeTestCases() {

@@ -1,4 +1,4 @@
-package org.ikigaidigital.dto;
+package org.ikigaidigital.adapter.in.dto;
 
 import java.math.BigDecimal;
 import java.util.List;

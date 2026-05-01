@@ -3,13 +3,10 @@ package org.ikigaidigital.service.interest.plan;
 import org.ikigaidigital.TimeDeposit;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 public class BasicInterestPlanCalculator implements InterestPlanCalculator {
 
     private static final BigDecimal INTEREST_RATE = BigDecimal.valueOf(0.01);
-
-    static final String BASIC_PLAN_TYPE = "basic";
 
     @Override
     public BigDecimal calculateInterest(TimeDeposit deposit) {

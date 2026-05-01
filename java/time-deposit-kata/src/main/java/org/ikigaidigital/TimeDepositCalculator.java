@@ -12,17 +12,13 @@ public class TimeDepositCalculator {
         for (int i = 0; i < xs.size(); i++) {
             double interest = 0;
 
-            if (xs.get(i).getDays() > 30) {
-                if (xs.get(i).getPlanType().equals("student")) {
-                    if (xs.get(i).getDays() < 366) {
-                        interest += new StudentInterestPlanCalculator().calculateInterest(xs.get(i)).doubleValue();
-                    }
-                } else if (xs.get(i).getPlanType().equals("premium")) {
-                    if (xs.get(i).getDays() > 45) {
-                        interest += xs.get(i).getBalance() * 0.05 / 12;
-                    }
-                } else if (xs.get(i).getPlanType().equals("basic")) {
-                    interest = new BasicInterestPlanCalculator().calculateInterest(xs.get(i)).doubleValue();
+            if (xs.get(i).getPlanType().equals("basic")) {
+                interest = new BasicInterestPlanCalculator().calculateInterest(xs.get(i)).doubleValue();
+            } else if (xs.get(i).getPlanType().equals("student")) {
+                interest += new StudentInterestPlanCalculator().calculateInterest(xs.get(i)).doubleValue();
+            } else if (xs.get(i).getPlanType().equals("premium")) {
+                if (xs.get(i).getDays() > 45) {
+                    interest += xs.get(i).getBalance() * 0.05 / 12;
                 }
             }
 

@@ -1,6 +1,7 @@
 package org.ikigaidigital;
 
 import org.ikigaidigital.service.interest.plan.BasicInterestPlanCalculator;
+import org.ikigaidigital.service.interest.plan.PremiumInterestPlanCalculator;
 import org.ikigaidigital.service.interest.plan.StudentInterestPlanCalculator;
 
 import java.math.BigDecimal;
@@ -17,9 +18,7 @@ public class TimeDepositCalculator {
             } else if (xs.get(i).getPlanType().equals("student")) {
                 interest += new StudentInterestPlanCalculator().calculateInterest(xs.get(i)).doubleValue();
             } else if (xs.get(i).getPlanType().equals("premium")) {
-                if (xs.get(i).getDays() > 45) {
-                    interest += xs.get(i).getBalance() * 0.05 / 12;
-                }
+                interest += new PremiumInterestPlanCalculator().calculateInterest(xs.get(i)).doubleValue();
             }
 
             double a2d = xs.get(i).getBalance() + (new BigDecimal(interest).setScale(2, RoundingMode.HALF_UP)).doubleValue();

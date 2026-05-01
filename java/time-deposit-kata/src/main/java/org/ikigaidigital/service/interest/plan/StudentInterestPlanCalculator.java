@@ -13,6 +13,6 @@ public class StudentInterestPlanCalculator implements InterestPlanCalculator {
         if (deposit.getDays() > 30 && deposit.getDays() < 366) {
             return calculateMonthlyInterest(deposit.getBalanceAsBigDecimal(), INTEREST_RATE);
         }
-        return BigDecimal.ZERO;
+        return ZERO_INTEREST;
     }
 }

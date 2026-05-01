@@ -4,13 +4,13 @@ import org.ikigaidigital.TimeDeposit;
 
 import java.math.BigDecimal;
 
-public class BasicInterestPlanCalculator implements InterestPlanCalculator {
+public class StudentInterestPlanCalculator implements InterestPlanCalculator {
 
-    private static final BigDecimal INTEREST_RATE = BigDecimal.valueOf(0.01);
+    private static final BigDecimal INTEREST_RATE = BigDecimal.valueOf(0.03);
 
     @Override
     public BigDecimal calculateInterest(TimeDeposit deposit) {
-        if (deposit.getDays() > 30) {
+        if (deposit.getDays() > 30 && deposit.getDays() < 366) {
             return calculateMonthlyInterest(deposit.getBalanceAsBigDecimal(), INTEREST_RATE);
         }
         return BigDecimal.ZERO;

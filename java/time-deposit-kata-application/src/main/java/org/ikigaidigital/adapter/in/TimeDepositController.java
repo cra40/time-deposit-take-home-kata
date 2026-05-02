@@ -62,8 +62,8 @@ public class TimeDepositController {
     }
 
     @Operation(
-        summary = "Apply daily interest to all time deposits",
-        description = "Calculates and persists one day of interest for every active time deposit, then returns the updated balances."
+        summary = "Apply monthly interest to all time deposits",
+        description = "Calculates and persists monthly interest for every active time deposit, then returns the updated balances."
     )
     @ApiResponse(
         responseCode = "200",

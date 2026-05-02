@@ -13,6 +13,9 @@ public interface InterestPlanCalculator {
     BigDecimal calculateInterest(TimeDepositV2 deposit);
 
     default BigDecimal calculateMonthlyInterest(BigDecimal balance, BigDecimal interestRate) {
+        if (balance == null || interestRate == null) {
+            throw new IllegalArgumentException("Balance and interest rate must not be null");
+        }
         return balance.multiply(interestRate).divide(MONTHS, 2, RoundingMode.HALF_UP);
     }
 

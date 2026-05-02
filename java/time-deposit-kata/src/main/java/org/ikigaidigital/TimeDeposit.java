@@ -9,14 +9,17 @@ import java.math.RoundingMode;
 public class TimeDeposit {
     private final Integer id;
     private final String planType;
-    private BigDecimal balance;
+    private Double balance;
     private final Integer days;
 
+    // Assumption: Deprecation is allowed
+    // No breaking change here, it is backwards compatible
+    // The mvn artifact and the package/class names haven't changed either
     @Deprecated
     public TimeDeposit(int id, String planType, Double balance, int days) {
         this.id = id;
         this.planType = planType;
-        this.balance = toBigDecimal(balance);
+        this.balance = balance;
         this.days = days;
     }
 
@@ -27,7 +30,7 @@ public class TimeDeposit {
     }
 
     public Double getBalance() {
-        return balance.doubleValue();
+        return balance;
     }
 
     public int getDays() {
@@ -35,18 +38,10 @@ public class TimeDeposit {
     }
 
     public void setBalance(Double balance) {
-        this.balance = toBigDecimal(balance);
-    }
-
-    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 
     public BigDecimal getBalanceAsBigDecimal() {
-        return balance;
-    }
-
-    private BigDecimal toBigDecimal(Double balance) {
-        return BigDecimal.valueOf(balance).setScale(2, RoundingMode.HALF_UP);
+        return balance == null ? null : BigDecimal.valueOf(balance).setScale(2, RoundingMode.HALF_UP);
     }
 }

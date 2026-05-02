@@ -17,6 +17,8 @@ public class TimeDepositCalculator {
         this.interestPlanCalculatorFactory = interestPlanCalculatorFactory;
     }
 
+    // Assumption: deprecation is allowed and any new functionality developed does not have to use the TimeDeposit and the TimeDepositCalculator classes
+    // Any existing usage of these 2 classes should be fine as there are no breaking changes
     public void updateBalance(List<TimeDeposit> xs) {
         xs.forEach(timeDeposit -> {
             final InterestPlanCalculator calculator = interestPlanCalculatorFactory.getCalculator(timeDeposit.getPlanType());
@@ -24,7 +26,7 @@ public class TimeDepositCalculator {
                     new TimeDepositV2(timeDeposit.getId(), timeDeposit.getPlanType(), timeDeposit.getBalanceAsBigDecimal(), timeDeposit.getDays())
             );
             final BigDecimal updatedBalance = timeDeposit.getBalanceAsBigDecimal().add(interest);
-            timeDeposit.setBalance(updatedBalance);
+            timeDeposit.setBalance(updatedBalance.doubleValue());
         });
     }
 }

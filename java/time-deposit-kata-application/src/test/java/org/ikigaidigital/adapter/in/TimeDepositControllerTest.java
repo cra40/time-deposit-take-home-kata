@@ -1,6 +1,7 @@
 package org.ikigaidigital.adapter.in;
 
 import org.ikigaidigital.adapter.in.dto.TimeDepositDto;
+import org.ikigaidigital.adapter.in.dto.TimeDepositWithWithdrawalsDto;
 import org.ikigaidigital.domain.TimeDepositV2;
 import org.ikigaidigital.domain.Withdrawal;
 import org.ikigaidigital.port.in.TimeDepositService;
@@ -40,7 +41,7 @@ class TimeDepositControllerTest {
         when(timeDepositService.getTimeDeposits()).thenReturn(List.of(deposit));
         when(withdrawalService.getWithdrawalsByTimeDepositId(1)).thenReturn(List.of(withdrawal1, withdrawal2));
 
-        List<TimeDepositDto> actual = underTest.getTimeDeposits();
+        List<TimeDepositWithWithdrawalsDto> actual = underTest.getTimeDeposits();
 
         assertThat(actual).hasSize(1);
 
@@ -67,7 +68,37 @@ class TimeDepositControllerTest {
     void getTimeDeposits_returnsEmptyList() {
         when(timeDepositService.getTimeDeposits()).thenReturn(Collections.emptyList());
 
-        List<TimeDepositDto> actual = underTest.getTimeDeposits();
+        List<TimeDepositWithWithdrawalsDto> actual = underTest.getTimeDeposits();
+
+        assertThat(actual).isEmpty();
+    }
+
+    @Test
+    void saveInterests_savesAndReturnsMappedTimeDeposits() {
+        TimeDepositV2 updated1 = new TimeDepositV2(1, BASIC.name(), BigDecimal.valueOf(1000.83), 45);
+        TimeDepositV2 updated2 = new TimeDepositV2(2, BASIC.name(), BigDecimal.valueOf(2001.66), 90);
+        when(timeDepositService.updateTimeDepositBalances()).thenReturn(List.of(updated1, updated2));
+
+        List<TimeDepositDto> actual = underTest.saveInterests();
+
+        assertThat(actual).hasSize(2);
+
+        assertThat(actual.get(0).id()).isEqualTo(updated1.id());
+        assertThat(actual.get(0).planType()).isEqualTo(updated1.planType());
+        assertThat(actual.get(0).balance()).isEqualTo(updated1.balance());
+        assertThat(actual.get(0).days()).isEqualTo(updated1.days());
+
+        assertThat(actual.get(1).id()).isEqualTo(updated2.id());
+        assertThat(actual.get(1).planType()).isEqualTo(updated2.planType());
+        assertThat(actual.get(1).balance()).isEqualTo(updated2.balance());
+        assertThat(actual.get(1).days()).isEqualTo(updated2.days());
+    }
+
+    @Test
+    void saveInterests_returnsEmptyList() {
+        when(timeDepositService.updateTimeDepositBalances()).thenReturn(Collections.emptyList());
+
+        List<TimeDepositDto> actual = underTest.saveInterests();
 
         assertThat(actual).isEmpty();
     }

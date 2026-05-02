@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.ArgumentCaptor;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -52,13 +51,11 @@ public class TimeDepositServiceTest {
     void updateBalance_appliesCorrectInterestByPlanType(String planType, double balance, int days, double expectedBalance) {
         final List<TimeDepositV2> deposits = List.of(new TimeDepositV2(1, planType, toBigDecimal(balance), days));
         when(repository.findAll()).thenReturn(deposits);
+        when(repository.saveAll(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        underTest.updateTimeDepositBalances();
+        final List<TimeDepositV2> updatedDeposits = underTest.updateTimeDepositBalances();
 
-        verify(repository).findAll();
-        ArgumentCaptor<List<TimeDepositV2>> timeDepositCaptor = ArgumentCaptor.forClass(List.class);
-        verify(repository).save(timeDepositCaptor.capture());
-        assertThat(timeDepositCaptor.getValue().get(0).balance()).isEqualTo(toBigDecimal(expectedBalance));
+        assertThat(updatedDeposits.get(0).balance()).isEqualTo(toBigDecimal(expectedBalance));
     }
 
     private static Stream<Arguments> planTypeTestCases() {

@@ -27,13 +27,13 @@ public class TimeDepositRepositoryImpl implements TimeDepositRepository {
     }
 
     @Override
-    public void save(List<TimeDepositV2> timeDeposits) {
-        timeDepositJPARepository.saveAll(
+    public List<TimeDepositV2> saveAll(List<TimeDepositV2> timeDeposits) {
+        return timeDepositJPARepository.saveAll(
                 timeDeposits
                         .stream()
                         .map(this::toTimeDepositEntity)
                         .toList()
-        );
+        ).stream().map(this::toTimeDepositV2).toList();
     }
 
     private TimeDepositV2 toTimeDepositV2(TimeDepositEntity entity) {

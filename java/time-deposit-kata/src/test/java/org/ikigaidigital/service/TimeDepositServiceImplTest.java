@@ -52,9 +52,11 @@ class TimeDepositServiceImplTest {
         List<TimeDepositV2> originals = List.of(original1, original2);
         when(timeDepositRepository.findAll()).thenReturn(originals);
         when(timeDepositCalculator.updateBalance(originals)).thenReturn(List.of(updated1, updated2));
+        when(timeDepositRepository.saveAll(List.of(updated1, updated2))).thenReturn(List.of(updated1, updated2));
 
-        underTest.updateTimeDepositBalances();
+        List<TimeDepositV2> actual = underTest.updateTimeDepositBalances();
 
-        verify(timeDepositRepository).save(List.of(updated1, updated2));
+        verify(timeDepositRepository).saveAll(List.of(updated1, updated2));
+        assertThat(actual).containsExactlyInAnyOrder(updated1, updated2);
     }
 }

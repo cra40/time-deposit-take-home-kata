@@ -24,9 +24,8 @@ public class TimeDepositServiceImpl implements TimeDepositService {
     }
 
     @Override
-    public void updateTimeDepositBalances() {
+    public List<TimeDepositV2> updateTimeDepositBalances() {
         List<TimeDepositV2> timeDeposits = timeDepositRepository.findAll();
-        List<TimeDepositV2> updatedTimeDeposits = timeDepositCalculator.updateBalance(timeDeposits);
-        timeDepositRepository.save(updatedTimeDeposits);
+        return timeDepositRepository.saveAll(timeDepositCalculator.updateBalance(timeDeposits));
     }
 }

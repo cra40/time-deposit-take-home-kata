@@ -8,6 +8,6 @@ public interface TimeDepositService {
 
     List<TimeDepositV2> getTimeDeposits();
 
-    void updateTimeDepositBalances();
+    List<TimeDepositV2> updateTimeDepositBalances();
 
 }

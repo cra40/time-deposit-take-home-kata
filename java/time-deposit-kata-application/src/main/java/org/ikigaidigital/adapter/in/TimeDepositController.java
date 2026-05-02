@@ -1,12 +1,14 @@
 package org.ikigaidigital.adapter.in;
 
 import org.ikigaidigital.adapter.in.dto.TimeDepositDto;
+import org.ikigaidigital.adapter.in.dto.TimeDepositWithWithdrawalsDto;
 import org.ikigaidigital.adapter.in.dto.WithdrawalDto;
 import org.ikigaidigital.domain.Withdrawal;
 import org.ikigaidigital.port.in.TimeDepositService;
 import org.ikigaidigital.port.in.WithdrawalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,9 +28,10 @@ public class TimeDepositController {
     }
 
     @GetMapping
-    public List<TimeDepositDto> getTimeDeposits() {
-        return timeDepositService.getTimeDeposits().stream()
-                .map(deposit -> new TimeDepositDto(
+    public List<TimeDepositWithWithdrawalsDto> getTimeDeposits() {
+        return timeDepositService.getTimeDeposits()
+                .stream()
+                .map(deposit -> new TimeDepositWithWithdrawalsDto(
                         deposit.id(),
                         deposit.planType(),
                         deposit.balance(),
@@ -38,8 +41,22 @@ public class TimeDepositController {
                 .toList();
     }
 
+    @PostMapping("/interests")
+    public List<TimeDepositDto> saveInterests() {
+        return timeDepositService.updateTimeDepositBalances()
+                .stream()
+                .map(timeDeposit -> new TimeDepositDto(
+                        timeDeposit.id(),
+                        timeDeposit.planType(),
+                        timeDeposit.balance(),
+                        timeDeposit.days()
+                ))
+                .toList();
+    }
+
     private List<WithdrawalDto> toWithdrawalDtos(List<Withdrawal> withdrawals) {
-        return withdrawals.stream()
+        return withdrawals
+                .stream()
                 .map(w -> new WithdrawalDto(w.id(), w.timeDepositId(), w.amount(), w.date()))
                 .toList();
     }

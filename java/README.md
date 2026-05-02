@@ -1,6 +1,7 @@
 # Time Deposit Refactoring Kata - Take-Home Assignment
 
 Application is developed using the preferred tech stack given in the requirements and embraces the hexagonal architectural pattern.
+The domain/business logic hexagon is a java library which is wired to a spring boot application in the infratructure/framework hexagon. Adapters are plugged in/out of the infrastructure layer.
 
 ### Prerequisites
 - Java 17 or higher

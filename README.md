@@ -1,5 +1,10 @@
 # Time Deposit Refactoring Kata - Take-Home Assignment
 
+
+Details on the implementation given in the README file inside the java directory
+
+
+
 ## XA Bank Time Deposit
 
 ### Context

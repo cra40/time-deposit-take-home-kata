@@ -1,7 +1,7 @@
 # Time Deposit Refactoring Kata - Take-Home Assignment
 
 Application is developed using the preferred tech stack given in the requirements and embraces the hexagonal architectural pattern.
-The domain/business logic hexagon is a java library which is wired to a spring boot application in the infratructure/framework hexagon. Adapters are plugged in/out of the infrastructure layer.
+The domain/business logic hexagon (`time-deposit-kata`) is a java library which is wired to a spring boot application in the infratructure/framework hexagon (`time-deposit-kata-application`). Adapters are plugged in/out of the infrastructure layer.
 
 ### Prerequisites
 - Java 17 or higher
@@ -9,8 +9,8 @@ The domain/business logic hexagon is a java library which is wired to a spring b
 - Docker 25 or higher
 
 ### Running
-- Start postgres `docker-compose up -d`
-- Start application `mvn spring-boot:run`
+- Start postgres from `time-deposit-take-home-kata/java` directory using the command `docker compose up -d`
+- Start application from `time-deposit-take-home-kata/java/time-deposit-kata-application` directory using the command `mvn spring-boot:run`
 - Try out the apis from swagger ui, http://localhost:8080/swagger-ui/index.html
 
 ### Swagger
